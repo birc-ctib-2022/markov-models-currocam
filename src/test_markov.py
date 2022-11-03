@@ -72,3 +72,10 @@ def test_3_cases_mm_log() -> None:
     assert pytest.approx(log_likelihood([1, 1, 1], mm)) == sum(map(math.log, [0.9, 0.6, 0.6]))
     assert pytest.approx(log_likelihood([1, 0, 0], mm)) == sum(map(math.log, [0.9, 0.4, 0.3]))
     assert pytest.approx(log_likelihood([1, 0, 1], mm)) == sum(map(math.log, [0.9, 0.4, 0.7]))
+
+
+def test_long_sequence() -> None:
+    mm = create_weather_mm()
+    assert pytest.approx(log_likelihood(50*[0], mm)) == sum(map(math.log, [0.1] + 49*[0.3]))
+    assert pytest.approx(log_likelihood(50*[1], mm)) == sum(map(math.log, [0.9] + 49*[0.6]))
+    assert pytest.approx(log_likelihood(25*[0, 1], mm)) == sum(map(math.log, [0.1] + 24*[0.7, 0.4] + [0.7]))
