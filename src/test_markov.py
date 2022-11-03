@@ -2,7 +2,7 @@
 
 import math
 import pytest
-from markov import MarkovModel, likelihood, log_likelihood
+from markov import MarkovModel, estimate_parameters, likelihood, log_likelihood
 
 
 def create_weather_mm()-> MarkovModel:
@@ -79,3 +79,17 @@ def test_long_sequence() -> None:
     assert pytest.approx(log_likelihood(50*[0], mm)) == sum(map(math.log, [0.1] + 49*[0.3]))
     assert pytest.approx(log_likelihood(50*[1], mm)) == sum(map(math.log, [0.9] + 49*[0.6]))
     assert pytest.approx(log_likelihood(25*[0, 1], mm)) == sum(map(math.log, [0.1] + 24*[0.7, 0.4] + [0.7]))
+
+def test_simplest_case_estimate() -> None:
+    mm = estimate_parameters([[0], [0]])
+    assert mm.init_probs == [1]
+    assert mm.trans == [[0]]
+
+def test_simplest_case_estimate() -> None:
+    mm = estimate_parameters([[0, 1, 1, 1, 1, 1], [1, 1, 1, 1]])
+    for obs, exp in zip(mm.init_probs, [0.5, 0.5]):
+        assert obs == exp
+    for obs, exp in zip( mm.trans[0], [0, 1]):
+        assert obs == exp
+    for obs, exp in zip( mm.trans[1], [0, 1]):
+        assert obs == exp
