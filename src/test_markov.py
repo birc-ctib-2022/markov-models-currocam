@@ -1,7 +1,8 @@
 """Testing Markov models."""
 
+import math
 import pytest
-from markov import MarkovModel, likelihood
+from markov import MarkovModel, likelihood, log_likelihood
 
 
 def create_weather_mm()-> MarkovModel:
@@ -43,3 +44,31 @@ def test_3_cases_mm() -> None:
     assert pytest.approx(likelihood([0, 1, 1], mm)) == 0.1 * 0.7 * 0.6
     assert pytest.approx(likelihood([1, 0, 0], mm)) == 0.9 * 0.4 * 0.3
     assert pytest.approx(likelihood([1, 0, 1], mm)) == 0.9 * 0.4 * 0.7
+
+def test_empty_log() -> None:
+    mm = create_weather_mm()
+    assert pytest.approx(log_likelihood([], mm)) == math.log(1)
+
+def test_initial_pro_log() -> None:
+    """Test your code."""
+    mm = create_weather_mm()
+    assert pytest.approx(log_likelihood([0], mm)) == math.log(0.1)
+    assert pytest.approx(log_likelihood([1], mm)) == math.log(0.9)
+
+def test_2_cases_mm_log() -> None:
+    """Test your code."""
+    mm = create_weather_mm()
+    assert pytest.approx(log_likelihood([0, 0], mm)) == sum(map(math.log, [0.1, 0.3]))
+    assert pytest.approx(log_likelihood([1, 1], mm)) == sum(map(math.log, [0.9, 0.6]))
+    assert pytest.approx(log_likelihood([0, 1], mm)) == sum(map(math.log, [0.1, 0.7]))
+    assert pytest.approx(log_likelihood([1, 0], mm)) == sum(map(math.log, [0.9, 0.4]))
+
+def test_3_cases_mm_log() -> None:
+    """Test your code."""
+    mm = create_weather_mm()
+    assert pytest.approx(log_likelihood([0, 0, 0], mm)) == sum(map(math.log, [0.1, 0.3, 0.3]))
+    assert pytest.approx(log_likelihood([0, 1, 0], mm)) == sum(map(math.log, [0.1, 0.7, 0.4]))
+    assert pytest.approx(log_likelihood([0, 1, 1], mm)) == sum(map(math.log, [0.1, 0.7, 0.6]))
+    assert pytest.approx(log_likelihood([1, 1, 1], mm)) == sum(map(math.log, [0.9, 0.6, 0.6]))
+    assert pytest.approx(log_likelihood([1, 0, 0], mm)) == sum(map(math.log, [0.9, 0.4, 0.3]))
+    assert pytest.approx(log_likelihood([1, 0, 1], mm)) == sum(map(math.log, [0.9, 0.4, 0.7]))

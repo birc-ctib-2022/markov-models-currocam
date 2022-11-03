@@ -1,6 +1,7 @@
 """Markov models."""
 
 
+import math
 import numpy as np
 
 
@@ -36,5 +37,20 @@ def likelihood(x: list[int], mm: MarkovModel) -> float:
     pre_prob, i = mm.init_probs[x[0]], 1
     while i < len(x):
         pre_prob *= mm.trans[x[i-1]][x[i]]
+        i += 1
+    return pre_prob
+
+def log_likelihood(x: list[int], mm: MarkovModel) -> float:
+    """
+    Compute the likelihood of mm given x.
+
+    This is the same as the probability of x given mm,
+    i.e., P(x ; mm).
+    """
+    if not x:
+        return math.log(1)
+    pre_prob, i = math.log(mm.init_probs[x[0]]), 1
+    while i < len(x):
+        pre_prob += math.log(mm.trans[x[i-1]][x[i]])
         i += 1
     return pre_prob
