@@ -15,6 +15,11 @@ def create_weather_mm()-> MarkovModel:
         transitions_from_CLOUDY
     ]
     return MarkovModel(init_probs, transition_probs)
+
+def test_empty() -> None:
+    mm = create_weather_mm()
+    assert pytest.approx(likelihood([], mm)) == 1
+
 def test_initial_pro() -> None:
     """Test your code."""
     mm = create_weather_mm()
