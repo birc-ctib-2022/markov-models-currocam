@@ -31,4 +31,11 @@ def likelihood(x: list[int], mm: MarkovModel) -> float:
     This is the same as the probability of x given mm,
     i.e., P(x ; mm).
     """
-    ...  # FIXME: implement this
+    match len(x):
+        case 1:
+            return mm.init_probs[x[0]]
+        case 2:
+            return mm.init_probs[x[0]] * mm.trans[x[0]][x[1]]
+        case _:
+            return mm.init_probs[x[0]] * mm.trans[x[0]][x[1]] 
+    
