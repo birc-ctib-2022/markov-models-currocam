@@ -31,11 +31,14 @@ def likelihood(x: list[int], mm: MarkovModel) -> float:
     This is the same as the probability of x given mm,
     i.e., P(x ; mm).
     """
-    match len(x):
-        case 1:
-            return mm.init_probs[x[0]]
-        case 2:
-            return mm.init_probs[x[0]] * mm.trans[x[0]][x[1]]
-        case _:
-            return mm.init_probs[x[0]] * mm.trans[x[0]][x[1]] 
+    def inner(x: list[int], mm: MarkovModel, pre_prob = None):
+        pre_prob = mm.init_probs[x[0]] if not pre_prob else pre_prob
+        match len(x):
+            case 1:
+                return pre_prob
+            case 2:
+                return pre_prob * mm.trans[x[0]][x[1]]
+            case _:
+                return inner(x[1:], mm, mm.init_probs[x[0]] * mm.trans[x[0]][x[1]])
+    return inner(x, mm)
     

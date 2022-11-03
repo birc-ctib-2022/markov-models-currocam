@@ -1,5 +1,6 @@
 """Testing Markov models."""
 
+import pytest
 from markov import MarkovModel, likelihood
 
 
@@ -17,14 +18,23 @@ def create_weather_mm()-> MarkovModel:
 def test_initial_pro() -> None:
     """Test your code."""
     mm = create_weather_mm()
-    assert likelihood([0], mm) == 0.1
-    assert likelihood([1], mm) == 0.9
+    assert pytest.approx(likelihood([0], mm)) == 0.1
+    assert pytest.approx(likelihood([1], mm)) == 0.9
 
 def test_2_cases_mm() -> None:
     """Test your code."""
     mm = create_weather_mm()
-    assert likelihood([0, 0], mm) == 0.1 * 0.3
-    assert likelihood([1, 1], mm) == 0.9 * 0.6
-    assert likelihood([0, 1], mm) == 0.1 * 0.7
-    assert likelihood([1, 0], mm) == 0.9 * 0.4
+    assert pytest.approx(likelihood([0, 0], mm)) == 0.1 * 0.3
+    assert pytest.approx(likelihood([1, 1], mm)) == 0.9 * 0.6
+    assert pytest.approx(likelihood([0, 1], mm)) == 0.1 * 0.7
+    assert pytest.approx(likelihood([1, 0], mm)) == 0.9 * 0.4
 
+def test_3_cases_mm() -> None:
+    """Test your code."""
+    mm = create_weather_mm()
+    assert pytest.approx(likelihood([0, 0, 0], mm)) == 0.1 * 0.3 * 0.3
+    assert pytest.approx(likelihood([1, 1, 1], mm)) == 0.9 * 0.6 * 0.6
+    assert pytest.approx(likelihood([0, 1, 0], mm)) == 0.1 * 0.7 * 0.4
+    assert pytest.approx(likelihood([0, 1, 1], mm)) == 0.1 * 0.7 * 0.6
+    assert pytest.approx(likelihood([1, 0, 0], mm)) == 0.9 * 0.4 * 0.3
+    assert pytest.approx(likelihood([1, 0, 1], mm)) == 0.9 * 0.4 * 0.7
