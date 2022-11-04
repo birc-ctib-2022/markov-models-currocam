@@ -80,7 +80,7 @@ def test_long_sequence() -> None:
     assert pytest.approx(log_likelihood(50*[1], mm)) == sum(map(math.log, [0.9] + 49*[0.6]))
     assert pytest.approx(log_likelihood(25*[0, 1], mm)) == sum(map(math.log, [0.1] + 24*[0.7, 0.4] + [0.7]))
 
-def test_simplest_case_estimate() -> None:
+def test_trivial_case_estimate() -> None:
     mm = estimate_parameters([[0], [0]])
     assert mm.init_probs == [1]
     assert mm.trans == [[0]]
